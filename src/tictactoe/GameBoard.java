@@ -29,19 +29,32 @@ public class GameBoard {
         }
     }
 
-    private boolean place(byte i, byte j, byte val) {
-        if (board[i][j] == EMPTY) {
-            board[i][j] = val;
-            return true;
+    protected void copyBoard(GameBoard oldBoard) {
+        for (byte i = 0; i < size; i++) {
+            for (byte j = 0; j < size; j++) {
+                board[i][j] = oldBoard.valAt(i, j);
+            }
         }
-        return false;
     }
 
-    public boolean placeX(byte i, byte j) {
+    protected void placeOwnVal(byte i, byte j, byte val){
+        board[i][j]=val;
+    }
+    
+    private GameBoard place(byte i, byte j, byte val) {
+        GameBoard returnBoard = new GameBoard(size);
+        returnBoard.copyBoard(this);
+        if (returnBoard.valAt(i, j) == EMPTY) {
+            returnBoard.placeOwnVal(i, j, val);
+        }
+        return returnBoard;
+    }
+
+    public GameBoard placeX(byte i, byte j) {
         return place(i, j, X);
     }
 
-    public boolean placeO(byte i, byte j) {
+    public GameBoard placeO(byte i, byte j) {
         return place(i, j, O);
     }
 
