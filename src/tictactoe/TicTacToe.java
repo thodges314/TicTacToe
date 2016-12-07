@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package tictactoe;
+import java.lang.*;
 
 /**
  *
@@ -15,57 +16,46 @@ public class TicTacToe {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        final byte SIZE = 8;
-        GameBoard board = new GameBoard(SIZE);
-        //fill random
-        for (int c = 0; c<(SIZE*2); c++){
-            byte i = (byte)(Math.random()*SIZE);
-            byte j = (byte)(Math.random()*SIZE);
-            if (c%2 == 0)
-                System.out.println("X: " + i + ", " + j + ": " + board.placeX(i, j));
+        //loop for autoplay
+        byte boardsize = 3;
+        System.out.println("Automatic play for board size " + boardsize);
+        byte maxTurns = (byte) (boardsize * boardsize);
+        byte turns = 0;
+        boolean xTurn = true;
+        GameBoard autoBoard = new GameBoard(boardsize);
+        autoBoard.displayBoard();
+        Score bestScore;
+        byte imove;
+        byte jmove;
+        long startTime;
+        long netTime;
+
+        while (autoBoard.checkWin() == 0 && turns++ < maxTurns) {
+            
+            startTime = System.nanoTime();
+
+            bestScore = (new MiniMaxAlphaBeta(autoBoard, xTurn).getBestScore());
+            imove = bestScore.getMove()[0];
+            jmove = bestScore.getMove()[1];
+            System.out.println("Next move: " + imove + ", " + jmove);
+            if (xTurn)
+                autoBoard = autoBoard.placeX(imove, jmove);
             else
-                System.out.println("O: " + i + ", " + j + ": " + board.placeO(i, j));
-        }
-        //print marks
-        for (byte i = 0; i < SIZE; i++) {
-            for (byte j = 0; j < SIZE; j++) {
-                System.out.print(board.markAt(i, j));
-            }
-            System.out.println();
-        }
-        //print vals
-        for (byte i = 0; i < SIZE; i++) {
-            for (byte j = 0; j < SIZE; j++) {
-                System.out.print(board.valAt(i, j));
-            }
-            System.out.println();
-        }
-        
-        //mark diagonal
-        System.out.println("win: " + board.checkWin());
-        for (byte i = 0; i<SIZE; i++){
-            System.out.println(board.placeX(i, i));
-        }
-        
-        //show marks
-        for (byte i = 0; i < SIZE; i++) {
-            for (byte j = 0; j < SIZE; j++) {
-                System.out.print(board.markAt(i, j));
-            }
-            System.out.println();
-        }
-        //show vals
-        for (byte i = 0; i < SIZE; i++) {
-            for (byte j = 0; j < SIZE; j++) {
-                System.out.print(board.valAt(i, j));
-            }
-            System.out.println();
-        }
-        System.out.println("win: " + board.checkWin());
-        byte[][] possMoves = board.possibleMoves();
-        byte possSize = (byte)possMoves.length;
-        for(byte i = 0; i<possSize; i++){
-            System.out.print("("+possMoves[i][0]+", " + possMoves[i][1]+") ");
+                autoBoard = autoBoard.placeO(imove, jmove);
+            autoBoard.displayBoard();
+            System.out.println("win? " + autoBoard.checkWin());
+            xTurn = !xTurn;
+            
+            netTime = (System.nanoTime() - startTime);
+            
+            System.out.println("in nanoSeconds: " + netTime);
+            netTime /= 1000000;
+            if (netTime > 1)
+                System.out.println("in milliseconds: " + netTime);
+            if (netTime > 1000)
+                System.out.println("in seconds: " +  netTime/1000);
+            if (netTime > 60000)
+                System.out.println("in minutes: " +  netTime/60000);
         }
 
     }

@@ -69,7 +69,7 @@ public class GameBoard {
             case O:
                 return 'O';
             default:
-                return ' ';
+                return '-';
         }
     }
 
@@ -140,5 +140,13 @@ public class GameBoard {
             }
         }
         return movesArray;
+    }
+    
+    public void displayBoard(){
+        for(byte i = 0; i< size; i++){
+            for(byte j = 0; j < size; j++)
+                System.out.print(markAt(i,j) + " ");
+            System.out.println();
+        }
     }
 }
