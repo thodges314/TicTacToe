@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package tictactoe;
+
 import java.lang.*;
 
 /**
@@ -31,33 +32,58 @@ public class TicTacToe {
         long netTime;
 
         while (autoBoard.checkWin() == 0 && turns++ < maxTurns) {
-            
+
             startTime = System.nanoTime();
 
             bestScore = (new MiniMaxAlphaBeta(autoBoard, xTurn).getBestScore());
             imove = bestScore.getMove()[0];
             jmove = bestScore.getMove()[1];
             System.out.println("Next move: " + imove + ", " + jmove);
-            if (xTurn)
+            if (xTurn) {
                 autoBoard = autoBoard.placeX(imove, jmove);
-            else
+            } else {
                 autoBoard = autoBoard.placeO(imove, jmove);
+            }
             autoBoard.displayBoard();
             System.out.println("win? " + autoBoard.checkWin());
             xTurn = !xTurn;
-            
+
             netTime = (System.nanoTime() - startTime);
-            
+
             System.out.println("in nanoSeconds: " + netTime);
-            netTime /= 1000000;
-            if (netTime > 1)
-                System.out.println("in milliseconds: " + netTime);
-            if (netTime > 1000)
-                System.out.println("in seconds: " +  netTime/1000);
-            if (netTime > 60000)
-                System.out.println("in minutes: " +  netTime/60000);
+
+            System.out.print("This is ");
+            if (netTime > (60 * 60 * 1000 * 1000 * 1000)) {
+                long hours = (netTime / (60 * 60 * 1000 * 1000 * 1000));
+                netTime = netTime % (60 * 60 * 1000 * 1000 * 1000);
+                System.out.print(hours + " hours ");
+            }
+            if (netTime > (60 * 1000 * 1000 * 1000)) {
+                long minutes = (netTime / (60 * 1000 * 1000 * 1000));
+                netTime = netTime % (60 * 1000 * 1000 * 1000);
+                System.out.print(minutes + " minutes ");
+            }
+            if (netTime > (1000 * 1000 * 1000)) {
+                long seconds = (netTime / (1000 * 1000 * 1000));
+                netTime = netTime % (1000 * 1000 * 1000);
+                System.out.print(seconds + " seconds ");
+            }
+            if (netTime > (1000 * 1000)) {
+                long milliseconds = (netTime / (1000 * 1000));
+                netTime = netTime % (1000 * 1000);
+                System.out.print(milliseconds + " milliseconds ");
+            }
+            if (netTime > (1000)) {
+                long microseconds = (netTime / (1000));
+                netTime = netTime % (1000);
+                System.out.print(microseconds + " microseconds ");
+            }
+            if (netTime > (1)) {
+                long nanoseconds =  (netTime);
+                System.out.print(nanoseconds + " nanoseconds ");
+            }
+            System.out.println();
         }
 
     }
-
 }
