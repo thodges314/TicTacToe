@@ -28,6 +28,10 @@ public class GameBoard {
             }
         }
     }
+    
+    public byte getSize(){
+        return size;
+    }
 
     protected void copyBoard(GameBoard oldBoard) {
         for (byte i = 0; i < size; i++) {

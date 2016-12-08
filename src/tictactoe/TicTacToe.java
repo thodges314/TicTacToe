@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package tictactoe;
+
+import java.util.Scanner;
+
 /**
  *
  * @author thodges
@@ -14,46 +17,87 @@ public class TicTacToe {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //loop for autoplay
-        byte boardsize = 5;
-        System.out.println("Automatic play for board size " + boardsize);
-        byte maxTurns = (byte) (boardsize * boardsize);
+        Scanner input = new Scanner(System.in);
+        byte boardSize;
+        byte computerTurns;
+        do{
+            System.out.print("Board size? ");
+            boardSize = input.nextByte();
+            System.out.print("Computer Turns? ");
+            computerTurns = input.nextByte();
+        } while (computerTurns > boardSize * boardSize);
+        autoplay(boardSize, computerTurns);
+
+
+    }
+
+    public static void autoplay(byte boardSize, byte computerTurns) {
+        System.out.println("Automatic play for board size " + boardSize);
+        byte autoFillTurns = (byte) (boardSize * boardSize - computerTurns);
         byte turns = 0;
         boolean xTurn = true;
-        GameBoard autoBoard = new GameBoard(boardsize);
+        GameBoard autoBoard = new GameBoard(boardSize);
+        autoBoard = fillTurns(autoBoard, xTurn, autoFillTurns);
+        xTurn = (autoFillTurns % 2 == 0);
         autoBoard.displayBoard();
         Score bestScore;
-        byte imove;
-        byte jmove;
+        byte i;
+        byte j;
         long startTime;
         long netTime;
 
-        while (autoBoard.checkWin() == 0 && turns++ < maxTurns) {
+        while (autoBoard.checkWin() == 0 && turns++ < computerTurns) {
 
             startTime = System.nanoTime();
 
             bestScore = (new MiniMaxAlphaBeta(autoBoard, xTurn).getBestScore());
-            imove = bestScore.getMove()[0];
-            jmove = bestScore.getMove()[1];
-            System.out.println("Next move: " + imove + ", " + jmove);
+            i = bestScore.getMove()[0];
+            j = bestScore.getMove()[1];
+            System.out.println("Next move: " + i + ", " + j);
             if (xTurn) {
-                autoBoard = autoBoard.placeX(imove, jmove);
+                autoBoard = autoBoard.placeX(i, j);
             } else {
-                autoBoard = autoBoard.placeO(imove, jmove);
+                autoBoard = autoBoard.placeO(i, j);
             }
             autoBoard.displayBoard();
             System.out.println("win? " + autoBoard.checkWin());
             xTurn = !xTurn;
 
             netTime = (System.nanoTime() - startTime);
-            
+
             reportTime(netTime);
         }
 
     }
-    
-    public static void autoplay(byte boardSize, byte turns){
-    
+
+    public static GameBoard fillTurns(GameBoard board, boolean xTurn, byte numberFill) {
+        GameBoard returnBoard = new GameBoard(board.getSize());
+        returnBoard.copyBoard(board);
+        for (byte i = 0; i < numberFill; i++) {
+            returnBoard = fillTurn(returnBoard, xTurn);
+            xTurn = !xTurn;
+        }
+        return returnBoard;
+    }
+
+    public static GameBoard fillTurn(GameBoard board, boolean xTurn) {
+        GameBoard returnBoard = new GameBoard(board.getSize());
+        returnBoard.copyBoard(board);
+        boolean success = false;
+        byte size = returnBoard.getSize();
+        while (success == false) {
+            byte i = (byte) (Math.random() * size);
+            byte j = (byte) (Math.random() * size);
+            if (returnBoard.valAt(i, j) == 0) {
+                if (xTurn) {
+                    returnBoard = returnBoard.placeX(i, j);
+                } else {
+                    returnBoard = returnBoard.placeO(i, j);
+                }
+                success = true;
+            }
+        }
+        return returnBoard;
     }
 
     public static void reportTime(long time) {
