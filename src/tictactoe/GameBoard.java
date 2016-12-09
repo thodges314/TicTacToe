@@ -62,11 +62,11 @@ public class GameBoard {
         return place(i, j, O);
     }
 
-    public byte valAt(byte i, byte j) {
+    protected byte valAt(byte i, byte j) {
         return board[i][j];
     }
 
-    public char markAt(int i, int j) {
+    protected char markAt(int i, int j) {
         switch (board[i][j]) {
             case X:
                 return 'X';

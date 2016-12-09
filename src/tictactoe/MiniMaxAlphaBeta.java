@@ -22,7 +22,7 @@ public class MiniMaxAlphaBeta {
     private GameBoard board;
     private boolean playerX;
     
-    public MiniMaxAlphaBeta(GameBoard board, boolean playerX, byte alpha, byte beta){
+    protected MiniMaxAlphaBeta(GameBoard board, boolean playerX, byte alpha, byte beta){
         this.board = board;
         this.playerX = playerX;
         this.alpha = alpha;
