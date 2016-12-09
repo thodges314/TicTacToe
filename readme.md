@@ -18,7 +18,28 @@ __Score__: This class bundles a score with a move.  It has getters and setters f
 
 __MiniMaxAlphaBeta__: This class does the real work.  The constructor receives a GameBoard and a boolean representing wheather it is X's turn to play.  The public method `getBestScore()` returns a Score object representing the ideal next move.  For a full explanation of the MiniMax algorithm, I recommend [this video](https://www.youtube.com/watch?v=STjW3eH0Cik).
 
-__TicTacToe__: As this is a work in progress, at any time in development the main method has served the purpose of testing all of the classes.  Now, when executed it asks for the size of the board and the number of moves that the computer will make.  If the number of moves is less than the size of the board squared then the board is filled with alternating Xs and Os scattered around the board to make up the difference between the board size and the number of possible moves that the computer is being asked to contemplate.  This lets us test execution time for board sizes other than square numbers.
+__TicTacToe__: As this is a work in progress, at any time in development the main method in the TicTacToe class has served the purpose of testing all of the classes.  Now, when executed it asks for the size of the board and the number of moves that the computer will make.  If the number of moves is less than the size of the board squared then the board is filled with alternating Xs and Os scattered around the board to make up the difference between the board size and the number of possible moves that the computer is being asked to contemplate.  This lets us test execution time for board sizes other than square numbers.
 After cpnstructing a board, the computer loops until the board is full or the game has been won, alternately assigning X or O to take a turn, displaying the move and the resultant board, and displaying the time taken to select a move.
 
-## result
+## initial results
+On a 3-by-3 board I found this program to run significantly faster and more efficiently in Java than in JavaScript.  While JavaScript would take 584 milliseconds to make the first move, Java would take only 51 milliseconds.
+
+When I initially tried running my program on a 4-by-4 board and waited several minutes for a result I thought that I had committed some error in my code.  Finally I decided to let my program run while I got up for some coffee.  On a 4-by-4 board my program took over 7 minutes to make the first move, and nearly 1 minute to make the second move.
+
+The following are the times taken in nanoseconds in one sample execution to make the 16 moves required to play a 4 by 4 game of tic-tac-toe:
+`438245236720`
+`59147675285`
+`41159916791`
+`2370946394`
+`717716489`
+`174163770`
+`42955012`
+`16490541`
+`5941570`
+`2063885`
+`1179783`
+`583850`
+`368384`
+`323892`
+`327889`
+`522487`
