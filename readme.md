@@ -17,3 +17,8 @@ __GameBoard__: This class instantiates an object representing a single tic-tac-t
 __Score__: This class bundles a score with a move.  It has getters and setters for the score (byte) and the accompanying move (byte array).  It implements comparable based on the score value.
 
 __MiniMaxAlphaBeta__: This class does the real work.  The constructor receives a GameBoard and a boolean representing wheather it is X's turn to play.  The public method `getBestScore()` returns a Score object representing the ideal next move.  For a full explanation of the MiniMax algorithm, I recommend [this video](https://www.youtube.com/watch?v=STjW3eH0Cik).
+
+__TicTacToe__: As this is a work in progress, at any time in development the main method has served the purpose of testing all of the classes.  Now, when executed it asks for the size of the board and the number of moves that the computer will make.  If the number of moves is less than the size of the board squared then the board is filled with alternating Xs and Os scattered around the board to make up the difference between the board size and the number of possible moves that the computer is being asked to contemplate.  This lets us test execution time for board sizes other than square numbers.
+After cpnstructing a board, the computer loops until the board is full or the game has been won, alternately assigning X or O to take a turn, displaying the move and the resultant board, and displaying the time taken to select a move.
+
+## result
