@@ -22,6 +22,8 @@ __TicTacToe__: As this is a work in progress, at any time in development the mai
 After cpnstructing a board, the computer loops until the board is full or the game has been won, alternately assigning X or O to take a turn, displaying the move and the resultant board, and displaying the time taken to select a move.
 
 ## initial results
+All experiments were conducted on a Intel Core i5-2430M System with 6GB of RAM running Xubuntu with minimal background activity.
+
 On a 3-by-3 board I found this program to run significantly faster and more efficiently in Java than in JavaScript.  While JavaScript would take 584 milliseconds to make the first move, Java would take only 51 milliseconds.
 
 When I initially tried running my program on a 4-by-4 board and waited several minutes for a result I thought that I had committed some error in my code.  Finally I decided to let my program run while I got up for some coffee.  On a 4-by-4 board my program took over 7 minutes to make the first move, and nearly 1 minute to make the second move.
