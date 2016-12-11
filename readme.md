@@ -26,22 +26,23 @@ All experiments were conducted on a Intel Core i5-2430M System with 6GB of RAM r
 
 On a 3-by-3 board I found this program to run significantly faster and more efficiently in Java than in JavaScript.  While JavaScript would take 584 milliseconds to make the first move, Java would take only 51 milliseconds.
 
-When I initially tried running my program on a 4-by-4 board and waited several minutes for a result I thought that I had committed some error in my code.  Finally I decided to let my program run while I got up for some coffee.  On a 4-by-4 board my program took over 7 minutes to make the first move, and nearly 1 minute to make the second move.
+When I initially tried running my program on a 4-by-4 board and waited several minutes for a result I thought that I had committed some error in my code.  Finally I decided to let my program run while I got up for some coffee.  On a 4-by-4 board my program took over 7 minutes to make the first move, and nearly 1 minute to make the second move.  
+The following are the times taken in nanoseconds in one sample execution to make the 16 moves required to play a 4 by 4 game of tic-tac-toe:  
+`438245236720`  
+`59147675285`  
+`41159916791`  
+`2370946394`  
+`717716489`  
+`174163770`  
+`42955012`  
+`16490541`  
+`5941570`  
+`2063885`  
+`1179783`  
+`583850`  
+`368384`  
+`323892`  
+`327889`  
+`522487`  
 
-The following are the times taken in nanoseconds in one sample execution to make the 16 moves required to play a 4 by 4 game of tic-tac-toe:
-`438245236720`
-`59147675285`
-`41159916791`
-`2370946394`
-`717716489`
-`174163770`
-`42955012`
-`16490541`
-`5941570`
-`2063885`
-`1179783`
-`583850`
-`368384`
-`323892`
-`327889`
-`522487`
+Intuitively, this appears exponential, but performing a linear fit on the natural logs of those value results in a high R
