@@ -45,7 +45,7 @@ The following are the times taken in nanoseconds in one sample execution to make
 `522487`  
 
 Intuitively, this appears exponential, but performing a linear fit on the natural logs of those value results in a high R^2 value value but a less than satisfying visual representation:  
-![]({{site.baseurl}}//fit1.png)
+![](http://javascriptonline.org/images/fit1.png)
 
 This experiment was conducted again asking the computer to find 17 moves.  A 5-by-5 board was rendered and 8 moves were randomly generated of alternate X and O before minimax was implemented.  The times to select moves were even more erratic:  
 `9336016288430` - `2 hours 35 minutes 36 seconds 16 milliseconds 288 microseconds 430 nanoseconds`  
@@ -68,4 +68,4 @@ This experiment was conducted again asking the computer to find 17 moves.  A 5-b
 
 Computation time suddenly drops from approximately 2 and a half hours to 1 minute to 400 milliseconds to 2 milliseconds and then to 1 millisecond where an even regression begins.  
 Here is a chart of the natural logs of those values in reverse order and the poorly representative linear best fit equation:  
-![]({{site.baseurl}}//fit2.png)
+![](http://javascriptonline.org/images/fit2.png)
