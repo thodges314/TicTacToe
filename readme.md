@@ -48,38 +48,24 @@ Intuitively, this appears exponential, but performing a linear fit on the natura
 ![]({{site.baseurl}}//fit1.png)
 
 This experiment was conducted again asking the computer to find 17 moves.  A 5-by-5 board was rendered and 8 moves were randomly generated of alternate X and O before minimax was implemented.  The times to select moves were even more erratic:  
-`9336016288430`  
-*2 hours 35 minutes 36 seconds 16 milliseconds 288 microseconds 430 nanoseconds*  
-`8490946512765`  
-*2 hours 21 minutes 30 seconds 946 milliseconds 512 microseconds 765 nanoseconds*  
-`8475921330967`  
-*2 hours 21 minutes 15 seconds 921 milliseconds 330 microseconds 967 nanoseconds*  
-`62478646908`  
-*1 minute 2 seconds 478 milliseconds 646 microseconds 908 nanoseconds*  
-`60380934206`  
-*1 minute 380 milliseconds 934 microseconds 206 nanoseconds*  
-`373576695`  
-*373 milliseconds 576 microseconds 695 nanoseconds*  
-`425921237`  
-*425 milliseconds 921 microseconds 237 nanoseconds*  
-`28910997`  
-*28 milliseconds 910 microseconds 997 nanoseconds*  
-`7167043`  
-*1 millisecond 923 microseconds 899 nanoseconds*  
-`1923899`  
-*This is 1 millisecond 923 microseconds 899 nanoseconds*  
-`999819`  
-*999 microseconds 819 nanoseconds*  
-`904596`  
-*904 microseconds 596 nanoseconds*  
-`508394`  
-*508 microseconds 394 nanoseconds*  
-`425584`  
-*425 microseconds 584 nanoseconds*  
-`495731`  
-*495 microseconds 731 nanoseconds*  
-`389555`  
-*389 microseconds 555 nanoseconds*  
-`358337`  
-*358 microseconds 337 nanoseconds*  
+`9336016288430` - `2 hours 35 minutes 36 seconds 16 milliseconds 288 microseconds 430 nanoseconds`  
+`8490946512765` - `2 hours 21 minutes 30 seconds 946 milliseconds 512 microseconds 765 nanoseconds`  
+`8475921330967` - `2 hours 21 minutes 15 seconds 921 milliseconds 330 microseconds 967 nanoseconds`  
+`62478646908` --- `1 minute 2 seconds 478 milliseconds 646 microseconds 908 nanoseconds`  
+`60380934206` --- `1 minute 380 milliseconds 934 microseconds 206 nanoseconds`  
+`373576695` ----- `373 milliseconds 576 microseconds 695 nanoseconds`  
+`425921237` ----- `425 milliseconds 921 microseconds 237 nanoseconds`  
+`28910997` ------ `28 milliseconds 910 microseconds 997 nanoseconds`  
+`7167043` ------- `1 millisecond 923 microseconds 899 nanoseconds`  
+`1923899` ------- `1 millisecond 923 microseconds 899 nanoseconds`  
+`999819` -------- `999 microseconds 819 nanoseconds`  
+`904596` -------- `904 microseconds 596 nanoseconds`  
+`508394` -------- `508 microseconds 394 nanoseconds`  
+`425584` -------- `425 microseconds 584 nanoseconds`  
+`495731` -------- `495 microseconds 731 nanoseconds`  
+`389555` -------- `389 microseconds 555 nanoseconds`  
+`358337` -------- `358 microseconds 337 nanoseconds`  
 
+Computation time suddenly drops from approximately 2 and a half hours to 1 minute to 400 milliseconds to 2 milliseconds and then to 1 millisecond where an even regression begins.  
+Here is a chart of the natural logs of those values in reverse order and the poorly representative linear best fit equation:  
+![]({{site.baseurl}}//fit2.png)
