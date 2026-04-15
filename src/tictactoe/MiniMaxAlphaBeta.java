@@ -8,21 +8,31 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MiniMaxAlphaBeta {
     private static final int WIN_VAL = 1_000_000;
-    // Massive cache for the M2 Max's RAM
     private static final ConcurrentHashMap<BoardKey, Integer> cache = new ConcurrentHashMap<>(10_000_000);
 
     public static MoveScore getBestMoveParallel(GameBoard board, boolean isX) {
         cache.clear();
         List<Integer> moves = board.getAllMoves();
+        if (moves.isEmpty())
+            return new MoveScore(0, 0, 0);
+
         AtomicInteger progress = new AtomicInteger(0);
         int total = moves.size();
+
+        // --- Smart Heartbeat Logic ---
+        // Only show progress if the board is 5x5 or larger.
+        // 3x3 and 4x4 are so fast they don't need it.
+        boolean showProgress = (board.size() >= 5);
 
         return moves.parallelStream()
                 .map(idx -> {
                     int r = idx / board.size();
                     int c = idx % board.size();
-                    // Heartbeat: So you know it's still working
-                    System.out.printf("Starting Branch [%d, %d] (%d/%d)%n", r, c, progress.incrementAndGet(), total);
+
+                    if (showProgress) {
+                        System.out.printf("Evaluating Branch [%d, %d] (%d/%d)...%n",
+                                r, c, progress.incrementAndGet(), total);
+                    }
 
                     GameBoard nextBoard = board.place(r, c, isX ? GameBoard.X : GameBoard.O);
                     int score = getScoreRecursive(nextBoard, !isX, -2_000_000, 2_000_000, 1);
@@ -42,16 +52,10 @@ public class MiniMaxAlphaBeta {
         if (moves.isEmpty())
             return 0;
 
-        // Canonical Symmetry Check
         BoardKey key = new BoardKey(getCanonical(board.grid(), board.size()));
         Integer cached = cache.get(key);
-        if (cached != null) {
-            if (cached >= WIN_VAL - 1000)
-                return cached - depth;
-            if (cached <= -WIN_VAL + 1000)
-                return cached + depth;
+        if (cached != null)
             return cached;
-        }
 
         int bestScore = isX ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
