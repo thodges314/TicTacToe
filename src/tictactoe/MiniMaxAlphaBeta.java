@@ -1,74 +1,63 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoe;
 
-/**
- *
- * @author thodges
- */
+import java.util.List;
+import java.util.Comparator;
+
 public class MiniMaxAlphaBeta {
-    private static byte MIN_SCORE = -128;
-    private static byte MAX_SCORE = 127;
-    private static byte ALPHA_START = -128;
-    private static byte BETA_START = 127;
-    
-    private Score bestScore = new Score();
-    private boolean keepSearching = true;
-    private byte alpha;
-    private byte beta;
-    private GameBoard board;
-    private boolean playerX;
-    
-    protected MiniMaxAlphaBeta(GameBoard board, boolean playerX, byte alpha, byte beta){
-        this.board = board;
-        this.playerX = playerX;
-        this.alpha = alpha;
-        this.beta = beta;
+    private static final int WIN_VAL = 1_000_000;
+
+    /**
+     * Entry point: Uses Parallel Streams to use all M2 Max cores for the root
+     * moves.
+     */
+    public static MoveScore getBestMoveParallel(GameBoard board, boolean isX) {
+        List<Integer> moves = board.getAllMoves();
+        if (moves.isEmpty())
+            return new MoveScore(0, 0, 0);
+
+        return moves.parallelStream()
+                .map(idx -> {
+                    // FIXED: GameBoard.O (Letter)
+                    GameBoard nextBoard = board.place(idx / board.size(), idx % board.size(),
+                            isX ? GameBoard.X : GameBoard.O);
+                    int score = getScoreRecursive(nextBoard, !isX, Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
+                    return new MoveScore(score, idx / board.size(), idx % board.size());
+                })
+                .max(isX ? Comparator.comparingInt(MoveScore::score)
+                        : Comparator.comparingInt(MoveScore::score).reversed())
+                .orElseThrow();
     }
-    
-    public MiniMaxAlphaBeta(GameBoard board, boolean playerX){
-        this(board, playerX, ALPHA_START, BETA_START);
-    }
-    
-    public Score getBestScore(){
-        if(board.possibleMoves().length == 0 || board.checkWin() != 0)
-            bestScore.setScore(board.checkWin());
-        else if(playerX){
-            bestScore.setScore(MIN_SCORE);
-            byte[][] possibleMoves = board.possibleMoves();
-            for(byte[] move: possibleMoves){
-                GameBoard expBoard = board.placeX(move[0], move[1]);
-                byte expScore = (new MiniMaxAlphaBeta(expBoard, false, alpha, beta)).getBestScore().getScore();
-                if(expScore > bestScore.getScore()) {
-                    bestScore.setScore(expScore);
-                    bestScore.setMove(move);
-                    if(expScore > alpha)
-                        alpha = expScore;
-                    if(expScore >= beta){
-                        keepSearching = false;
-                        break;
-                    }
-                }
+
+    /**
+     * Recursive Step: Standard Minimax with Alpha-Beta Pruning.
+     * Full Depth (No Limit).
+     */
+    private static int getScoreRecursive(GameBoard board, boolean isX, int alpha, int beta, int depth) {
+        // Standard Win Check
+        if (board.checkWinAtLastMove()) {
+            return isX ? -WIN_VAL + depth : WIN_VAL - depth;
+        }
+
+        List<Integer> moves = board.getAllMoves();
+        if (moves.isEmpty())
+            return 0; // Draw
+
+        int bestScore = isX ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+        for (int idx : moves) {
+            // FIXED: GameBoard.O (Letter)
+            GameBoard nextBoard = board.place(idx / board.size(), idx % board.size(), isX ? GameBoard.X : GameBoard.O);
+            int eval = getScoreRecursive(nextBoard, !isX, alpha, beta, depth + 1);
+
+            if (isX) {
+                bestScore = Math.max(bestScore, eval);
+                alpha = Math.max(alpha, eval);
+            } else {
+                bestScore = Math.min(bestScore, eval);
+                beta = Math.min(beta, eval);
             }
-        } else {
-            bestScore.setScore(MAX_SCORE);
-            byte[][] possibleMoves = board.possibleMoves();
-            for(byte[] move: possibleMoves){
-                GameBoard expBoard = board.placeO(move[0], move[1]);
-                byte expScore = (new MiniMaxAlphaBeta(expBoard, true, alpha, beta)).getBestScore().getScore();
-                if(expScore < bestScore.getScore()) {
-                    bestScore.setScore(expScore);
-                    bestScore.setMove(move);
-                    if(expScore < beta)
-                        beta = expScore;
-                    if(expScore <= alpha){
-                        break;
-                    }
-                }
-            }
+            if (beta <= alpha)
+                break; // Alpha-Beta Pruning
         }
         return bestScore;
     }
