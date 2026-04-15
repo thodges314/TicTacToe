@@ -4,24 +4,29 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MiniMaxAlphaBeta {
     private static final int WIN_VAL = 1_000_000;
-    private static final ConcurrentHashMap<BoardKey, Integer> cache = new ConcurrentHashMap<>(5_000_000);
+    // Massive cache for the M2 Max's RAM
+    private static final ConcurrentHashMap<BoardKey, Integer> cache = new ConcurrentHashMap<>(10_000_000);
 
     public static MoveScore getBestMoveParallel(GameBoard board, boolean isX) {
         cache.clear();
         List<Integer> moves = board.getAllMoves();
-        if (moves.isEmpty())
-            return new MoveScore(0, 0, 0);
+        AtomicInteger progress = new AtomicInteger(0);
+        int total = moves.size();
 
         return moves.parallelStream()
                 .map(idx -> {
-                    GameBoard nextBoard = board.place(idx / board.size(), idx % board.size(),
-                            isX ? GameBoard.X : GameBoard.O);
-                    // Start search. Note: we pass depth 1
+                    int r = idx / board.size();
+                    int c = idx % board.size();
+                    // Heartbeat: So you know it's still working
+                    System.out.printf("Starting Branch [%d, %d] (%d/%d)%n", r, c, progress.incrementAndGet(), total);
+
+                    GameBoard nextBoard = board.place(r, c, isX ? GameBoard.X : GameBoard.O);
                     int score = getScoreRecursive(nextBoard, !isX, -2_000_000, 2_000_000, 1);
-                    return new MoveScore(score, idx / board.size(), idx % board.size());
+                    return new MoveScore(score, r, c);
                 })
                 .max(isX ? Comparator.comparingInt(MoveScore::score)
                         : Comparator.comparingInt(MoveScore::score).reversed())
@@ -29,10 +34,7 @@ public class MiniMaxAlphaBeta {
     }
 
     private static int getScoreRecursive(GameBoard board, boolean isX, int alpha, int beta, int depth) {
-        // 1. ALWAYS check for win before cache lookup
         if (board.checkWinAtLastMove()) {
-            // If X just moved (isX is now false) and won: positive score
-            // If O just moved (isX is now true) and won: negative score
             return isX ? -WIN_VAL + depth : WIN_VAL - depth;
         }
 
@@ -40,14 +42,13 @@ public class MiniMaxAlphaBeta {
         if (moves.isEmpty())
             return 0;
 
-        // 2. Cache Lookup (using canonical symmetry)
+        // Canonical Symmetry Check
         BoardKey key = new BoardKey(getCanonical(board.grid(), board.size()));
         Integer cached = cache.get(key);
         if (cached != null) {
-            // Adjust cached score for current depth
-            if (cached >= WIN_VAL - 100)
+            if (cached >= WIN_VAL - 1000)
                 return cached - depth;
-            if (cached <= -WIN_VAL + 100)
+            if (cached <= -WIN_VAL + 1000)
                 return cached + depth;
             return cached;
         }
@@ -69,14 +70,13 @@ public class MiniMaxAlphaBeta {
                 break;
         }
 
-        // 3. Store in cache (store the raw score, adjustment happens on retrieval)
         cache.put(key, bestScore);
         return bestScore;
     }
 
     public static byte[] getCanonical(byte[] grid, int size) {
         byte[] min = grid;
-        for (int t = 0; t < 8; t++) {
+        for (int t = 1; t < 8; t++) {
             byte[] current = new byte[grid.length];
             for (int r = 0; r < size; r++) {
                 for (int c = 0; c < size; c++) {
