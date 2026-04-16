@@ -1,8 +1,5 @@
 package tictactoe;
 
-import jdk.incubator.vector.ByteVector;
-import jdk.incubator.vector.VectorOperators;
-import jdk.incubator.vector.VectorSpecies;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +7,6 @@ public record GameBoard(byte[] grid, int size, int target, int lastMoveIdx) {
     public static final byte X = 1;
     public static final byte O = -1;
     public static final byte EMPTY = 0;
-    private static final VectorSpecies<Byte> SPECIES = ByteVector.SPECIES_PREFERRED;
 
     public GameBoard(int size, int target) {
         this(new byte[size * size], size, target, -1);

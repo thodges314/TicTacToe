@@ -36,6 +36,7 @@ public class TicTacToe {
             }
             xTurn = !xTurn;
         }
+        scanner.close();
     }
 
     private static void display(GameBoard b) {
